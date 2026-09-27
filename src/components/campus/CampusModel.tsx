@@ -23,12 +23,15 @@ function Block({
   const [hovered, setHovered] = useState(false);
   const { x, z, w, d, h } = b.model;
 
+  // 选中时轻微抬升,使用帧率无关的阻尼
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05);
     const mesh = ref.current;
     if (!mesh) return;
-    const target = active ? h * 1.12 : 1;
-    mesh.scale.y += (target / h - mesh.scale.y / 1) * 0 + (target - mesh.scale.y * h) * dt * 4 / h;
+    const target = active ? 1.12 : 1;
+    const k = 1 - Math.exp(-8 * dt);
+    mesh.scale.y += (target - mesh.scale.y) * k;
+    mesh.position.y = (h * mesh.scale.y) / 2;
   });
 
   const color = STATUS_HEX[b.status];
@@ -108,7 +111,7 @@ export default function CampusModel({
 }) {
   return (
     <Canvas shadows camera={{ position: [11, 8, 11], fov: 45 }} dpr={[1, 1.75]}>
-      <color attach="background" args={["#0c1venv" as unknown as string]} />
+      <color attach="background" args={["#0b1726"]} />
       <fog attach="fog" args={["#0b1726", 22, 44]} />
       <ambientLight intensity={0.55} />
       <directionalLight
