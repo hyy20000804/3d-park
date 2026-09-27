@@ -61,8 +61,10 @@ export default function CesiumScene({ selectedId, onSelect }: Props) {
     viewerRef.current = viewer;
 
     viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString("#0d1b2c");
-    viewer.scene.skyAtmosphere.hueShift = -0.05;
-    viewer.scene.skyAtmosphere.saturationShift = 0.1;
+    if (viewer.scene.skyAtmosphere) {
+      viewer.scene.skyAtmosphere.hueShift = -0.05;
+      viewer.scene.skyAtmosphere.saturationShift = 0.1;
+    }
     viewer.scene.globe.enableLighting = false;
     viewer.scene.fog.enabled = true;
     viewer.resolutionScale = Math.min(window.devicePixelRatio, 1.5);
